@@ -28,17 +28,16 @@ jobs:
         run: |
           echo "Mocking unit tests... Tests successful!"
 
-        - name: Login to Amazon ECR
-          id: login-ecr
-          uses: aws-actions/amazon-ecr-login@v1
-          with:
-            mask-password: true
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-            AWS_REGION: us-east-1
-
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: us-east-1
 
       - name: Build and Push Application Image
         env:
