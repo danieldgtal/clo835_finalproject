@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: employees
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      serviceAccountName: clo835-group1
+      containers:
+        - name: webapp
+          image: 624571715162.dkr.ecr.us-east-1.amazonaws.com/flask-app-repo
+          ports:
+            - containerPort: 81
+          env:
+            - name: DBHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBHOST
+            - name: DBPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBPORT
+            - name: DBUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBUSER
+            - name: DBPWD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-root-password
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-database
+            - name: GROUP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: GROUP_NAME
+            - name: IMAGE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: IMAGE_URL

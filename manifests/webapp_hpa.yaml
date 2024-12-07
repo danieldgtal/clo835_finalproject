@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: employees
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      serviceAccountName: clo835-group1  # Assign the created ServiceAccount
+      containers:
+        - name: webapp
+          image: 624571715162.dkr.ecr.us-east-1.amazonaws.com/flask-app-repo
+          ports:
+            - containerPort: 81
+          # Add metrics annotations
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 81
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 81
+            initialDelaySeconds: 10
+            periodSeconds: 20
+            
+          env:
+            - name: DBHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBHOST
+            - name: DBPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBPORT
+            - name: DBUSER
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: DBUSER      
+            
+              
+            - name: DBPWD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-root-password
+            - name: DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: mysql-database
+            
+              
+            - name: GROUP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: GROUP_NAME
+            - name: IMAGE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: webapp
+                  key: IMAGE_URL
