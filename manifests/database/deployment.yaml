@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: database-container
-        image: 782879222248.dkr.ecr.us-east-1.amazonaws.com/docker-prod-containers-database:latest
+        image: 624571715162.dkr.ecr.us-east-1.amazonaws.com/docker-prod-containers-database:latest
         resources:
           requests:
             cpu: 100m
